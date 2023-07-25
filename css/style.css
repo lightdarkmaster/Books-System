@@ -1,0 +1,93 @@
+table td,
+table th {
+    vertical-align: middle;
+    text-align: right;
+    padding: 20px!important;
+    color: white;
+    font-weight: bold;
+    background-color: grey;
+    justify-content: center;
+    margin: auto;
+}
+
+body {
+    background-image: url(bg.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    height: 100%;
+}
+
+.p-5 {
+    background-color: transparent;
+    height: 100%;
+}
+
+.input-group {
+    position: relative;
+    left: 60%;
+    width: 40%;
+}
+
+tr {
+    background-color: #1A1919A5;
+}
+
+tr>th {
+    color: red;
+    font-weight: 900;
+}
+
+
+/* Media Query for Mobile Devices */
+
+@media only screen and (max-width: 600px) {
+    th,
+    td {
+        padding: 5px;
+        /* Reduce padding for smaller screens */
+        font-size: 12px;
+        /* Adjust font size for readability */
+    }
+    .btn {
+        width: 45px;
+        height: 30px;
+        padding: 2px;
+        font-size: 12px;
+    }
+    .btn-info {
+        width: 45px;
+        height: 40px;
+        padding: 2px;
+        font-size: 12px;
+    }
+    .btn-warning {
+        width: 45px;
+        height: 25px;
+        padding: 0;
+        font-size: 12px;
+    }
+    .btn-danger {
+        width: 45px;
+        height: 25px;
+        padding: 0;
+        font-size: 12px;
+    }
+    .btn-primary {
+        width: 80px;
+        height: 45px;
+        padding: 2px;
+        font-size: 12px;
+    }
+    .input-group {
+        position: relative;
+        left: 60%;
+        width: 50%;
+        font-size: 12px;
+        padding: 2px;
+    }
+    form {
+        width: 300px;
+        font-size: 13px;
+    }
+}
