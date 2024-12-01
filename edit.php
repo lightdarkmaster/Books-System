@@ -1,74 +1,114 @@
+<?php
+require 'config.php';
+
+$id = $_GET['id'];
+$item = $conn->query("SELECT * FROM items WHERE id = $id")->fetch_assoc();
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+
+    $stmt = $conn->prepare("UPDATE items SET name = ?, description = ?, price = ? WHERE id = ?");
+    $stmt->bind_param('ssdi', $name, $description, $price, $id);
+    $stmt->execute();
+
+    header('Location: index.php');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Edit Book</title>
-    <link href="img/favicon.png" rel="icon">
-    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+    <title>Edit Item</title>
     <style>
-         body{
-            background-image:url(bg.jpg);
-            background-repeat: no-repeat;
-            background-size: cover;
-            color: white;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
+            color: #333;
+        }
+        input, textarea, button {
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container my-5">
-    <header class="d-flex justify-content-between my-4">
-            <h1>Edit Book</h1>
-            <div>
-            <a href="index.php" class="btn btn-primary">Back</a>
-            </div>
-        </header>
-        <form action="process.php" method="post">
-            <?php 
-            
-            if (isset($_GET['id'])) {
-                include("connect.php");
-                $id = $_GET['id'];
-                $sql = "SELECT * FROM books WHERE id=$id";
-                $result = mysqli_query($conn,$sql);
-                $row = mysqli_fetch_array($result);
-                ?>
-                     <div class="form-elemnt my-4">
-                <input type="text" class="form-control" name="title" placeholder="Book Title:" value="<?php echo $row["title"]; ?>">
-            </div>
-            <div class="form-elemnt my-4">
-                <input type="text" class="form-control" name="author" placeholder="Author Name:" value="<?php echo $row["author"]; ?>">
-            </div>
-            <div class="form-elemnt my-4">
-                <select name="type" id="" class="form-control">
-                    <option value="">Select Book Type:</option>
-                    <option value="Adventure" <?php if($row["type"]=="Adventure"){echo "selected";} ?>>Adventure</option>
-                    <option value="Action" <?php if($row["type"]=="Action"){echo "selected";} ?>>Action</option>
-                    <option value="Crime" <?php if($row["type"]=="Crime"){echo "selected";} ?>>Crime</option>
-                    <option value="Comedy" <?php if($row["type"]=="Comedy"){echo "selected";} ?>>Comedy</option>
-                    <option value="Fantasy" <?php if($row["type"]=="Fantasy"){echo "selected";} ?>>Fantasy</option>
-                    <option value="Horror" <?php if($row["type"]=="Horror"){echo "selected";} ?>>Horror</option>
-                    <option value="Romance" <?php if($row["type"]=="Romance"){echo "selected";} ?>>Romance</option>
-                </select>
-            </div>
-            <div class="form-element my-4">
-                <textarea name="description" id="" class="form-control" placeholder="Book Description:"><?php echo $row["description"]; ?></textarea>
-            </div>
-            <input type="hidden" value="<?php echo $id; ?>" name="id">
-            <div class="form-element my-4">
-                <input type="submit" name="edit" value="Edit Book" class="btn btn-primary">
-            </div>
-                <?php
-            }else{
-                echo "<h3>Book Does Not Exist</h3>";
-            }
-            ?>
-           
+    <div class="container">
+        <h1>Edit Item</h1>
+        <form method="POST">
+            <label>
+                Name:
+                <input type="text" name="name" value="<?= htmlspecialchars($item['name']) ?>" required>
+            </label>
+            <label>
+                Description:
+                <textarea name="description" rows="4" required><?= htmlspecialchars($item['description']) ?></textarea>
+            </label>
+            <label>
+                Price:
+                <input type="number" name="price" step="0.01" value="<?= htmlspecialchars($item['price']) ?>" required>
+            </label>
+            <button type="submit">Update</button>
         </form>
-        
-        
+        <div class="back-link">
+            <a href="index.php">Back to Item List</a>
+        </div>
     </div>
 </body>
 </html>

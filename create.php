@@ -1,59 +1,111 @@
+<?php
+require 'config.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['name'];
+    $description = $_POST['description'];
+    $price = $_POST['price'];
+
+    $stmt = $conn->prepare("INSERT INTO items (name, description, price) VALUES (?, ?, ?)");
+    $stmt->bind_param('ssd', $name, $description, $price);
+    $stmt->execute();
+
+    header('Location: index.php');
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-    <title>Add New Book</title>
-    <link href="img/favicon.png" rel="icon">
-    <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
+    <title>Create Item</title>
     <style>
-         body{
-            background-image:url(bg.jpg);
-            background-repeat: no-repeat;
-            background-size: cover;
-            color: white;
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            display: flex;
+            flex-direction: column;
+            font-size: 16px;
+            color: #333;
+        }
+        input, textarea, button {
+            font-size: 16px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+        }
+        input:focus, textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            text-decoration: none;
+            color: #007bff;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 <body>
-    <div class="container my-5">
-    <header class="d-flex justify-content-between my-4">
-            <h1>Add New Book</h1>
-            <div>
-            <a href="index.php" class="btn btn-primary">Back</a>
-            </div>
-        </header>
-        
-        <form action="process.php" method="post">
-            <div class="form-elemnt my-4">
-                <input type="text" class="form-control" name="title" placeholder="Book Title:">
-            </div>
-            <div class="form-elemnt my-4">
-                <input type="text" class="form-control" name="author" placeholder="Author Name:">
-            </div>
-            <div class="form-elemnt my-4">
-                <select name="type" id="" class="form-control">
-                    <option value="">Select Book Type:</option>
-                    <option value="Adventure">Adventure</option>
-                     <option value="Action">Action</option>
-                    <option value="Crime">Crime</option>
-                     <option value="Comedy">Comedy</option>
-                    <option value="Fantasy">Fantasy</option>
-                    <option value="Horror">Horror</option>
-                     <option value="Romance">Romance</option>
-                </select>
-            </div>
-            <div class="form-element my-4">
-                <textarea name="description" id="" class="form-control" placeholder="Book Description:"></textarea>
-            </div>
-            <div class="form-element my-4">
-                <input type="submit" name="create" value="Add Book" class="btn btn-primary">
-            </div>
+    <div class="container">
+        <h1>Add New Item</h1>
+        <form method="POST">
+            <label>
+               Item Name:
+                <input type="text" name="name" required>
+            </label>
+            <label>
+                Description:
+                <textarea name="description" rows="4" required></textarea>
+            </label>
+            <label>
+                Price:
+                <input type="number" name="price" step="0.01" required>
+            </label>
+            <button type="submit">Save</button>
         </form>
-        
-        
+        <div class="back-link">
+            <a href="index.php">Back to Item List</a>
+        </div>
     </div>
 </body>
 </html>
